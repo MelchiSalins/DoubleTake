@@ -1,0 +1,108 @@
+#!/usr/bin/env ruby
+
+require 'doubletake'
+require 'thor'
+require 'uri'
+require 'pry'
+
+class DoubleTake < Thor
+	include CrawlerHelper
+
+	desc "compare", "Starts comparing the stage and prod site configured in the YAML file"
+	option :conf, :desc => "--conf config_file.yml", :alias => "-c", :required => true
+	def compare
+		puts "* DoubleTake Compare Initializing..."
+		$config = YAML.load(File.open(options[:conf], "r"))
+		$config.LOGGED_IN = false # forcing this variable to false.
+		# puts $config.inspect
+		start
+	end # compare
+
+	desc "scrape ", "Scrape the specified Domain."
+	option :conf, :desc => "--conf config_file.yml",
+		   :alias => "-c", :required => true
+	def scrape
+		#TODO: This command doesn't support resume capability yet.
+		#	   Need to make resume a subcommand of comapre and scrape.
+		puts "* DoubleTake Scrape Initializing..."
+		$config = YAML.load(File.open(options[:conf], "r"))
+		$config.LOGGED_IN = false # forcing this variable to false.
+		# puts $config.inspect
+		start
+	end
+
+	desc "resume ", "Resumes a previous session of compare, Progress YAML file are located in the ./date directory."
+	option :conf, :required => true, :desc => "resume --conf progress_timestamp.yml",
+		   	 :alias => "-c"
+	option :type, :required => true, :desc => "Specify the type of scan being resumed (scrape/compare).",
+				 :alias => "-t"
+	def resume
+		puts "* Resuming previous session."
+		$config = YAML.load(File.open(options[:conf], "r"))
+		# puts $config.inspect
+		if ["scrape", "compare"].include? options[:type]
+			$cf = options[:type]
+		else
+			puts "--type should be either 'scrape' or 'compare'"
+			exit 1
+		end
+		start
+	end
+
+	desc "generate", "Generate a config file template."
+	option :file, :required => true, :desc => "Filename and path to write to. Ex: ~/config.yml"
+	def generate
+		begin
+			c = Configuration.new
+			File.open(options[:file],"w") {|f| f.write(c.to_yaml)}
+		rescue Exception => error
+			puts error
+			exit 1
+		end
+	end
+	no_commands do
+		def start
+			begin
+				$cf = caller[0][/`([^']*)'/, 1] unless $cf# Setting Calling function unless already set.
+				threads = []
+				$domains_list = {}
+				if $config.all_good?
+					puts "* $config.all_good? returned true."
+				else
+					puts "- There is error(s) in the suppplied config file. Cannot proceed."
+					exit(1)
+				end
+				$hostname = URI.parse($config.stage).host # This is required to name folders to store scan results.
+				puts $hostname
+				$domains_list[$hostname] = [$config.stage, $config.prod]
+
+				$domains_list.each do |site, urls|
+					# Here we pick each domain and spawn new threads
+					# for the regression tests.
+					# TODO: This is useful only when stage and prod are a list
+					#       of domains.
+					threads << Thread.new {task_1 = Crawler.new(site, urls[0], urls[1])
+					task_1.crawl if $config.LOGGED_IN == false
+					# Add code to check if creds are provided and then execute following:
+					if $config.LOGIN
+						task_1.login_to_as(urls[0], task_1.driver1)
+						task_1.login_to_as(urls[1], task_1.driver2) if $cf == "compare"
+						$config.to_be_scraped << task_1.driver1.current_url
+						task_1.crawl
+					end
+					task_1.clean_up
+					}
+				puts "* Thread Dispatched"
+				end
+				threads.each {|thr| thr.join}
+			rescue Interrupt
+				puts "\n* Exiting."
+			rescue Exception => e
+				puts e
+				puts "\n* Exiting."
+			end
+		end
+	end
+end
+
+DoubleTake.start(ARGV)
