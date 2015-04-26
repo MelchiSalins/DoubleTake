@@ -32,8 +32,10 @@ consequences elsewhere in the project.
 DoubleTake is a command line tool and is configured using a YAML file.
 
 Generating and editing a config file is easy.
+```
 Run:
    $ doubletake generate --file /tmp/mysite_config.yml
+```
 
 Use your preferred file editor and edit the config file.
     ```
