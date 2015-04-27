@@ -9,12 +9,13 @@ class Configuration
 	attr_reader :PASS_VALUE, :PASS_DOM_ID
 	attr_reader :LOGIN_CONFIRM_CHECK, :LOGIN_CONFIRM, :LOGIN
 	attr_reader :URI_THRESHOLD, :IMAGE_THRESHOLD
+	attr_reader :SCREEN_RESOLUTION
 
 	def initialize
 		@stage = ""
 		@prod  = ""
 		@ignored = ["ignore_me", "not_important_url_prefix",".css", ".pdf", ".js", ".jpg", ".png", "video/pop", "user/logout", "?", "=", "#"]
-		@SCREEN_RESOLUTION = {:desktop => [1400,800]}
+		@SCREEN_RESOLUTION = {:desktop => [1400,800], :tablet => [640,480], :mobile => [300,600]}
 		@IMAGE_THRESHOLD = 0
 		@LOGIN = true
 		@LOGIN_URI = 'user/login' # http://example.com/login

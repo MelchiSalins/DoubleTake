@@ -88,20 +88,23 @@ class Crawler < SiteContext
 
 	def initialize(site, test, base, browser = :firefox)
 		@site = site.to_s
-		FileUtils::mkdir_p "#{ENV['HOME']}/DoubleTake_data/desktop/"+@site
-		puts "* Screenshots are saved in #{ENV['HOME']}/DoubleTake_data/desktop/"+@site
+		$tmp_site = @site
+		$config.SCREEN_RESOLUTION.keys.each do |key|
+			FileUtils::mkdir_p "#{ENV['HOME']}/DoubleTake_data/#{@site}/#{key}"
+		end
+		puts "* Screenshots are saved in #{ENV['HOME']}/DoubleTake_data/#{@site}"
 		$config.to_be_scraped << test
 		@test_domain_length = test.length
 		puts "Crawler initialized"
 		@driver1 = SiteContext.new
 		@driver1 = @driver1.set_driver(browser)
 		@driver1.get(test)
-		@driver1.manage.window.resize_to(1400, 800) #Desktop size
+		@driver1.manage.window.resize_to($config.SCREEN_RESOLUTION.first[1][0], $config.SCREEN_RESOLUTION.first[1][1]) #First resolution
 		unless $cf == "scrape"
 			@driver2 = SiteContext.new
 			@driver2 = @driver2.set_driver(browser)
 			@driver2.get(base)
-			@driver2.manage.window.resize_to(1400, 800) #Desktop size
+			@driver2.manage.window.resize_to($config.SCREEN_RESOLUTION.first[1][0], $config.SCREEN_RESOLUTION.first[1][1]) #First resolution
 		end
 	end
 
@@ -152,7 +155,6 @@ class Crawler < SiteContext
 			puts "Good Link: "+link
 			return false
 		end #End of `if`
-
 	end
 
 	def crawl
@@ -196,13 +198,12 @@ class Crawler < SiteContext
 					prod_link = $config.prod + stage_uri
 					# *****************************************
 					if $cf == "scrape"
-						warning_log = CSV.open("#{ENV['HOME']}/DoubleTake_data/desktop/#{@site}.csv", "a")
-						name = sanitize(stage_uri)
-						@driver1.save_screenshot("#{ENV['HOME']}/DoubleTake_data/desktop/"+@site+"/"+name+"_stage.png")
-						@driver1.find_elements(:css, ".messages.error").each do |ele|
-							warning_log << [@driver1.current_url, ele.text] unless ele.nil?
-							end
-						warning_log.close
+						$config.SCREEN_RESOLUTION.each do |type, res|
+							name = sanitize(stage_uri)
+							@driver1.manage.window.resize_to(res[0], res[1])
+							@driver1.save_screenshot("#{ENV['HOME']}/DoubleTake_data/#{@site}/#{type}/#{name}_stage.png")
+						end
+						@driver1.manage.window.resize_to($config.SCREEN_RESOLUTION.first[1][0], $config.SCREEN_RESOLUTION.first[1][1])
 					else
 						@driver2.get(prod_link)
 						image_stuff(stage_uri)
@@ -213,14 +214,14 @@ class Crawler < SiteContext
 					$config.to_be_scraped =	$config.to_be_scraped - [nil] # This was issue when .delete() was used which resulted in element replaced by nil
 					$config.to_be_scraped =	$config.to_be_scraped - [each_link]
 					$config.to_be_scraped.uniq!
-					File.open("#{ENV['HOME']}/DoubleTake_data/desktop/progress_#{@site}.yml", "w") {|f| f.write($config.to_yaml)}
+					File.open("#{ENV['HOME']}/DoubleTake_data/progress_#{@site}.yml", "w") {|f| f.write($config.to_yaml)}
 				rescue Selenium::WebDriver::Error::StaleElementReferenceError => e
 					puts "Stale element error occured moving to next link: #{stage_uri}"
 					puts e
 					next
 				rescue Exception => e
 					puts "Generic Exception occured"
-					binding.pry
+					#binding.pry
 					puts e.backtrace
 					next
 				end #End of begin
@@ -232,17 +233,21 @@ class Crawler < SiteContext
 
 	def image_stuff(stage_uri)
 		name = sanitize(stage_uri)
-		@driver1.save_screenshot("#{ENV['HOME']}/DoubleTake_data/desktop/"+@site+"/"+name+"_stage.png")
-		@driver2.save_screenshot("#{ENV['HOME']}/DoubleTake_data/desktop/"+@site+"/"+name+"_prod.png")
-		# a, b = IO.read("#{ENV['HOME']}/DoubleTake_data/desktop/stage_"+@site+"/"+name+".png")[0x10..0x18].unpack('NN')
-		img1 = ImageList.new("#{ENV['HOME']}/DoubleTake_data/desktop/"+@site+"/"+name+"_stage.png")
-		img2 = ImageList.new("#{ENV['HOME']}/DoubleTake_data/desktop/"+@site+"/"+name+"_prod.png")
-		diff_img, diff_metric  = img1[0].compare_channel( img2[0], Magick::MeanSquaredErrorMetric )
-		if diff_metric > $config.IMAGE_THRESHOLD
-			diff_img.write("#{ENV['HOME']}/DoubleTake_data/desktop/"+@site+"/"+name+"_diff.png")
-		else
-			File.delete("#{ENV['HOME']}/DoubleTake_data/desktop/"+@site+"/"+name+"_stage.png")
-			File.delete("#{ENV['HOME']}/DoubleTake_data/desktop/"+@site+"/"+name+"_prod.png")
-		end # if diff_metric > $IMAGE_THRESHOLD
+		$config.SCREEN_RESOLUTION.each do |type, res|
+			@driver1.manage.window.resize_to(res[0], res[1])
+			@driver2.manage.window.resize_to(res[0], res[1])
+			@driver1.save_screenshot("#{ENV['HOME']}/DoubleTake_data/#{@site}/#{type}/#{name}_stage.png")
+			@driver2.save_screenshot("#{ENV['HOME']}/DoubleTake_data/#{@site}/#{type}/#{name}_prod.png")
+			# a, b = IO.read("#{ENV['HOME']}/DoubleTake_data/desktop/stage_"+@site+"/"+name+".png")[0x10..0x18].unpack('NN')
+			img1 = ImageList.new("#{ENV['HOME']}/DoubleTake_data/#{@site}/#{type}/#{name}_stage.png")
+			img2 = ImageList.new("#{ENV['HOME']}/DoubleTake_data/#{@site}/#{type}/#{name}_prod.png")
+			diff_img, diff_metric  = img1[0].compare_channel( img2[0], Magick::MeanSquaredErrorMetric )
+			if diff_metric > $config.IMAGE_THRESHOLD
+				diff_img.write("#{ENV['HOME']}/DoubleTake_data/#{@site}/#{type}/"+name+"_diff.png")
+			else
+				File.delete("#{ENV['HOME']}/DoubleTake_data/#{@site}/#{type}/#{name}_stage.png")
+				File.delete("#{ENV['HOME']}/DoubleTake_data/#{@site}/#{type}/#{name}_prod.png")
+			end # if diff_metric > $IMAGE_THRESHOLD
+		end
 	end #def image_stuff(image1, image2)
 end #Class Crawler < SiteContext

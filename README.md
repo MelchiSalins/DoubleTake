@@ -47,7 +47,39 @@ Use your preferred file editor and edit the config file.
 
 Edit the ignored list to skip URIs or file formats. DoubleTake generates sensible defaults that can be extended.
 
-The window resolution can also be changed. The default desktop resolution is set to 1400x800
+Testing multiple window resolutions for responsive design is made possible in DoubleTake.
+By default DoubleTake generated config file has 3 resolutions:
+
+```
+SCREEN_RESOLUTION:
+  :desktop:
+  - 1400
+  - 800
+  :tablet:
+  - 640
+  - 480
+  :mobile:
+  - 300
+  - 600
+```
+The above configuration has Desktop mode set to 1400x800, tablet to 640x480 and mobile to 300x600. This can be edited and extended
+to something like this:
+
+```
+SCREEN_RESOLUTION:
+  :desktop:
+  - 1024
+  - 800
+  :tablet:
+  - 640
+  - 480
+  :mobile:
+  - 300
+  - 550
+  :iphone6:
+  - 375
+  - 667
+```
 
 DoubleTake is cable to authenticate with user credentials provided in the config file. This allows more in-depth scans.
 

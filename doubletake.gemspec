@@ -9,10 +9,10 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Melchi Salins"]
   spec.email         = ["melchisalins@gmail.com"]
 
-  spec.summary       = %q{Visual regression testing tool and more }
-  spec.homepage      = "http://melchisalins.users.sf.net/"
+  spec.summary       = %q{Visual regression testing tool and more.}
+  spec.homepage      = "https://www.linkedin.com/in/melchisalins"
   spec.license       = "MIT"
-  spec.description   = "This is test description"
+  spec.description   = "Visual regression testing tool and more"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.bindir        = "exe"
