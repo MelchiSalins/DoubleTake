@@ -88,7 +88,6 @@ class Crawler < SiteContext
 
 	def initialize(site, test, base, browser = :firefox)
 		@site = site.to_s
-		$tmp_site = @site
 		$config.SCREEN_RESOLUTION.keys.each do |key|
 			FileUtils::mkdir_p "#{ENV['HOME']}/DoubleTake_data/#{@site}/#{key}"
 		end

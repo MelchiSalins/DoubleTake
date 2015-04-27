@@ -167,7 +167,9 @@ Ex: ~/DoubleTake_data/desktop/progress_mysite.yml
 In addition to this progress config file we also need to known the type of the scan that is being resumed i.e, compare / scrape
 
 To Resume a scan:
+```
     $ doubletake resume --type compare --conf ~/DoubleTake_data/desktop/progress_mysite.com.yml
+```
 
 
 ## Contributing
