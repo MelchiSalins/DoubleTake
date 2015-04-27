@@ -15,7 +15,7 @@ class Configuration
 		@stage = ""
 		@prod  = ""
 		@ignored = ["ignore_me", "not_important_url_prefix",".css", ".pdf", ".js", ".jpg", ".png", "video/pop", "user/logout", "?", "=", "#"]
-		@SCREEN_RESOLUTION = {:desktop => [1400,800], :tablet => [640,480], :mobile => [300,600]}
+		@SCREEN_RESOLUTION = {:desktop => [1400,800], :iPadair => [1024,768], :iphone6 => [375,667]}
 		@IMAGE_THRESHOLD = 0
 		@LOGIN = true
 		@LOGIN_URI = 'user/login' # http://example.com/login
