@@ -1,4 +1,4 @@
-require './lib/config.rb'
+require 'config.rb'
 require 'uri'
 require 'selenium-webdriver'
 

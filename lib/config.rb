@@ -1,6 +1,6 @@
 require 'yaml'
 require 'pry'
-require './lib/crawler_lib.rb'
+require 'crawler_lib'
 
 class Configuration
 	attr_accessor :stage, :prod, :ignored, :DESKTOP, :to_be_scraped
@@ -15,7 +15,7 @@ class Configuration
 		@stage = ""
 		@prod  = ""
 		@ignored = ["ignore_me", "not_important_url_prefix",".css", ".pdf", ".js", ".jpg", ".png", "video/pop", "user/logout", "?", "=", "#"]
-		@SCREEN_RESOLUTION = {:desktop => [1400,800], :iPadair => [1024,768], :iphone6 => [375,667]}
+		@SCREEN_RESOLUTION = {:desktop => [1400,800], :iPadAir => [1024,768], :iphone6 => [375,667]}
 		@IMAGE_THRESHOLD = 0
 		@LOGIN = true
 		@LOGIN_URI = 'user/login' # http://example.com/login
