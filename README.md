@@ -7,8 +7,17 @@ DoubleTake is a Visual regression testing tool for web-applications. It is packa
 
 
 Install it using:
-
+```
     $ gem install doubletake
+```
+
+Note: DoubleTake depends on Rmagick gem which in turn relies on imagemagick.
+
+On OS X:
+```
+brew install imagemagick
+```
+
 
 ## Usage
 
