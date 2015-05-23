@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["melchisalins@gmail.com"]
 
   spec.summary       = %q{Visual regression testing tool and more.}
-  spec.homepage      = "https://www.linkedin.com/in/melchisalins"
+  spec.homepage      = "https://github.com/MelchiSalins/DoubleTake/"
   spec.license       = "MIT"
   spec.description   = "Visual regression testing tool and more"
 
