@@ -36,8 +36,11 @@ describe 'Configuration' do
     it 'has instance variable @PASS_VALUE of String type' do
       expect(config.PASS_VALUE.class.to_s).to eq("String")
     end
-    it 'has instance variable @LOGIN_CONFIRM of Array type' do
-      expect(config.LOGIN_CONFIRM.class.to_s).to eq("TrueClass")
+    it 'has instance variable @LOGIN_CONFIRM of Bool type' do
+      expect(config.LOGIN_CONFIRM.class.to_s).to eq("TrueClass").or eq("FalseClass")
+    end
+    it 'has instance variable @LOGIN_CONFIRM_CHECK of Bool type' do
+      expect(config.LOGIN_CONFIRM_CHECK.class.to_s).to eq("TrueClass") || eq("FalseClass")
     end
   end
 end
