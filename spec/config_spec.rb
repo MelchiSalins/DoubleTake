@@ -7,7 +7,7 @@ describe 'Configuration' do
       expect(config.stage.class.to_s).to eq("String")
     end
     it 'has instance variable @prod of String type' do
-      expect(config.prod.class.to_s).to eq("Strisng")
+      expect(config.prod.class.to_s).to eq("String")
     end
     it 'has instance variable @ignored of Array type' do
       expect(config.ignored.class.to_s).to eq("Array")
@@ -40,7 +40,7 @@ describe 'Configuration' do
       expect(config.LOGIN_CONFIRM.class.to_s).to eq("TrueClass").or eq("FalseClass")
     end
     it 'has instance variable @LOGIN_CONFIRM_CHECK of Bool type' do
-      expect(config.LOGIN_CONFIRM_CHECK.class.to_s).to eq("TrueClass") || eq("FalseClass")
+      expect(config.LOGIN_CONFIRM_CHECK.class.to_s).to eq("String")
     end
   end
 end
