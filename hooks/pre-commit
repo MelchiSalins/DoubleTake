@@ -1,0 +1,8 @@
+#!/bin/bash
+
+rspec
+
+if [ $? != 0 ]; then
+  echo "==> RSpec tests failed, Please fix your code before committing"
+  exit 1
+fi

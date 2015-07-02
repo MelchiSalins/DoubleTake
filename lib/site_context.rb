@@ -7,26 +7,6 @@ require 'RMagick'
 require 'yaml'
 require 'csv'
 
-# require 'pry-debugger'
-
-# class Configuration
-# 	# attr_accessor :stage, :prod, :ignored, :DESKTOP
-# 	def initialize
-# 		@stage = "https://rialto-stage.equiem.com.au"
-# 		@prod  = "https://atrialto.com"
-# 		@ignored = ["ignore_me", "not_important_url_prefix",".css", ".pdf", ".js", ".jpg", ".png", "video/pop", "user/logout", "?", "=", "#"]
-# 		@SCREEN_RESOLUTION = {:desktop => [1400,800], :mobile => [300,150]}
-# 		@IMAGE_THRESHOLD = 0
-# 		@LOGIN = true
-# 		@LOGIN_URI = 'login' # http://example.com/login
-# 		@USER_DOM_ID = 'edit-name'
-# 		@USER_VALUE = 'melchisalins'
-# 		@PASS_DOM_ID = 'edit-pass'
-# 		@PASS_VALUE = 'secret_password'
-# 		@LOGIN_CONFIRM = true
-# 		@LOGIN_CONFIRM_CHECK = 'homepage-onsite-team'
-# 	end
-# end
 
 class SiteContext
 	attr_accessor :driver

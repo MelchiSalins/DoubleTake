@@ -29,25 +29,7 @@ module CrawlerHelper
 		# puts name
 		return name
 	end
-	#
-	# def bad_link?(each_link)
-	# 	# return True if these characters exists in
-	# 	# the URL: $, #, png, css, js, jpg, pdf
-	# 	# Check for both upper and lower case ^
-	# 	begin
-	# 		each = each_link.upcase
-	# 		if each.include?("?") || each.include?("#") || each.include?(".PNG") || each.include?(".CSS") || each.include?("JS") || each.include?("JPG") || each.include?("PDF") || each.include?("/VIDEO/POP")
-	# 				# puts "Bad Link: " + each.to_s
-	# 				return true
-	# 		else
-	# 			return false
-	# 		end
-	# 	rescue Exception => e
-	# 		puts e.message
-  # 			puts e.backtrace.inspect
-  # 		end
-	#
-	# end
+
 
 	def do_not_ignore?(each_link, scraped)
 		# This checks if the passed link should be
