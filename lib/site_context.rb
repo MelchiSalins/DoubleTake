@@ -49,23 +49,6 @@ class Crawler < SiteContext
 	include Magick
 	attr_accessor :site, :driver1, :driver2, :progress
 
-	class Progress
-		attr_accessor :driver1_type, :driver2_type
-		attr_accessor :stage, :prod
-		attr_accessor :bad_links, :to_be_scraped, :scraped
-
-		def initialize
-			@driver1_type = ""
-			@driver2_type = ""
-			@stage = ""
-			@prod  = ""
-			@bad_links    = []
-			@to_be_scraped = []
-			@scraped       = []
-		end
-	end
-
-
 	def initialize(site, test, base, browser = :firefox)
 		@site = site.to_s
 		$config.SCREEN_RESOLUTION.keys.each do |key|
