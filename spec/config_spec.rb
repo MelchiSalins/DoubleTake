@@ -42,5 +42,8 @@ describe 'Configuration' do
     it 'has instance variable @LOGIN_CONFIRM_CHECK of Bool type' do
       expect(config.LOGIN_CONFIRM_CHECK.class.to_s).to eq("String")
     end
+    it 'has instance variable @WHITELIST of Array type' do
+      expect(config.WHITELIST.class.to_s).to eq("Array")
+    end
   end
 end
