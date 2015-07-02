@@ -49,6 +49,16 @@ class DoubleTake < Thor
 		start
 	end
 
+	desc "whitelist ", "Only scans the the URLs specified in the config whitelist section."
+	option :conf, :required => true, :desc => "whitelist --conf config_file.yml",
+					:alias => "-c"
+	def whitelist
+		puts "* Scanning whitelist URLs from YAML file."
+		$config = YAML.load(File.open(options[:conf], "r"))
+		# puts $config.inspect
+		fast_scan
+	end
+
 	desc "generate", "Generate a config file template."
 	option :file, :required => true, :desc => "Filename and path to write to. Ex: ~/config.yml"
 	def generate
@@ -101,6 +111,18 @@ class DoubleTake < Thor
 				puts e
 				puts "\n* Exiting."
 			end
+		end
+
+		def fast_scan
+			unless $config.all_good?
+				puts " * YAML config file has errors, please fill in all the required fields."
+				exit 1
+			end
+			# threads = []
+			$domains_list = {}
+			$hostname = URI.parse($config.stage).host # This is required to name folders to store scan results.
+			wls = WhiteListScan.new
+			wls.scan
 		end
 	end
 end

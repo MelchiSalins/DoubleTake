@@ -9,7 +9,7 @@ class Configuration
 	attr_reader :PASS_VALUE, :PASS_DOM_ID
 	attr_reader :LOGIN_CONFIRM_CHECK, :LOGIN_CONFIRM, :LOGIN
 	attr_reader :URI_THRESHOLD, :IMAGE_THRESHOLD
-	attr_reader :SCREEN_RESOLUTION
+	attr_reader :SCREEN_RESOLUTION, :WHITELIST
 
 	def initialize
 		@stage = ""
@@ -24,7 +24,8 @@ class Configuration
 		@PASS_DOM_ID = 'edit-pass'
 		@PASS_VALUE = 'secret_password'
 		@LOGIN_CONFIRM = false
-		@LOGIN_CONFIRM_CHECK = 'homepage-onsite-team'
+		@LOGIN_CONFIRM_CHECK = 'region-wrapper'
+		@WHITELIST = ['https://example.com', 'https://example-stage.com']
 		@bad_links = []
 		@to_be_scraped = []
 		@scraped = []

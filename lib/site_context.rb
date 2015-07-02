@@ -213,3 +213,33 @@ class Crawler < SiteContext
 		end
 	end #def image_stuff(image1, image2)
 end #Class Crawler < SiteContext
+
+class WhiteListScan < Crawler
+	include CrawlerHelper
+	def initialize(site, browser = :firefox)
+		@site = site
+		@browser = browser
+		$config.SCREEN_RESOLUTION.keys.each do |key|
+			FileUtils::mkdir_p "#{ENV['HOME']}/DoubleTake_data/#{@site}/#{key}"
+		end
+		puts "* Screenshots are saved in #{ENV['HOME']}/DoubleTake_data/#{@site}"
+	end
+
+	def scan
+		@site_context = SiteContext.new
+		@driver = @site_context.set_driver(@browser)
+		$config.WHITELIST.each do |url|
+			@driver.get(url)
+			if @driver.current_url.include? "/user/login?destination"
+				@site_context.login_to_as($config.stage, @driver)
+				@driver.get(url)
+			end
+			$config.SCREEN_RESOLUTION.each do |type, res|
+				name = sanitize(url)
+				@driver.manage.window.resize_to(res[0], res[1])
+				@driver.save_screenshot("#{ENV['HOME']}/DoubleTake_data/#{@site}/#{type}/#{name}.png")
+			end
+		end
+		@driver.quit
+	end
+end
