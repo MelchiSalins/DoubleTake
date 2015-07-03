@@ -114,14 +114,14 @@ class DoubleTake < Thor
 		end
 
 		def fast_scan
-			unless $config.all_good?
+			unless $config.proceed_with_whitelist_scan?
 				puts " * YAML config file has errors, please fill in all the required fields."
 				exit 1
 			end
 			# threads = []
 			$domains_list = {}
 			$hostname = URI.parse($config.stage).host # This is required to name folders to store scan results.
-			wls = WhiteListScan.new
+			wls = WhiteListScan.new(URI.parse($config.stage).host)
 			wls.scan
 		end
 	end

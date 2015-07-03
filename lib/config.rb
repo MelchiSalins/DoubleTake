@@ -1,5 +1,6 @@
 require 'yaml'
 require 'pry'
+require 'uri'
 require 'crawler_lib'
 
 class Configuration
@@ -25,7 +26,7 @@ class Configuration
 		@PASS_VALUE = 'secret_password'
 		@LOGIN_CONFIRM = false
 		@LOGIN_CONFIRM_CHECK = 'region-wrapper'
-		@WHITELIST = ['https://example.com', 'https://example-stage.com']
+		@WHITELIST = ['https://example.com/', 'https://example-stage.com/']
 		@bad_links = []
 		@to_be_scraped = []
 		@scraped = []
@@ -70,6 +71,26 @@ class Configuration
 			return false
 		end
 	end
+
+	def proceed_with_whitelist_scan?
+		return_value = true
+		if URI.parse($config.stage).host != URI.parse($config.WHITELIST.first).host
+			puts "* Please make sure 'stage' and the 'whitelist' URL are the same domain."
+			return_value = false
+		end
+		if $config.WHITELIST.length < 1
+			puts "* Make sure to have atleast one URL to scan in whitelist"
+			return_value = false
+		end
+		$config.WHITELIST.each do |each_url|
+			if URI.parse(each_url).scheme == nil
+				puts "* Please make sure to add a scheme to #{each_url}"
+				return_value = false
+			end
+		end
+		return_value
+	end
+
 end
 # c = Configuration.new
 # File.open("test_yaml.yml","w") {|f| f.write(c.to_yaml)}
