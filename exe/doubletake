@@ -115,7 +115,7 @@ class DoubleTake < Thor
 
 		def fast_scan
 			unless $config.proceed_with_whitelist_scan?
-				puts " * YAML config file has errors, please fill in all the required fields."
+				puts "* YAML config file has errors, please fill in all the required fields."
 				exit 1
 			end
 			# threads = []

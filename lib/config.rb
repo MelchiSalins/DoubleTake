@@ -38,7 +38,7 @@ class Configuration
 			# Fixes scheme of the URL if not present. This is needed by Selenium
 			return_value = false
 			if @stage.length <= 0 && @prod.length <= 0
-				puts "Stage and Production URL missing."
+				puts "* Stage and Production URL missing."
 				return_value = false
 				return return_value
 			else
@@ -50,7 +50,7 @@ class Configuration
 			if @LOGIN && @LOGIN_URI.nil? == false && @USER_DOM_ID.nil? == false && @USER_VALUE.nil? == false && @PASS_DOM_ID.nil? == false && @PASS_VALUE.nil? == false
 				return_value = true
 			else
-				puts "Please configure LOGIN parameters"
+				puts "* Please configure LOGIN parameters"
 				return_value = false
 				return return_value
 			end
@@ -60,7 +60,7 @@ class Configuration
 			elsif @LOGIN_CONFIRM == false
 				return_value = true
 			else
-				puts "Please configure LOGIN_CONFIRM_CHECK value"
+				puts "* Please configure LOGIN_CONFIRM_CHECK value"
 				return_value = false
 				return return_value
 			end
